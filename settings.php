@@ -4,7 +4,7 @@ echo '<div class="wrap"><h2>' . esc_html( __( 'WP2SMFBridge Settings', 'WP2SMFBr
 if (isset($_POST['action'])) {
 	if ($_POST['action'] === 'save') 
 		echo '<div id="message" class="updated"><p>' . esc_html( __( 'Settings saved!', 'WP2SMFBridge' ) ) . '</p></div>';
-	else if ($_POST['action'] === 'sync') 
+	else if ($_POST['action'] === 'sync') //TODO
 		echo '<div id="message" class="updated"><p>' . esc_html( __( 'Sync databases...', 'WP2SMFBridge' ) ) . '</p></div>';
 }
 	

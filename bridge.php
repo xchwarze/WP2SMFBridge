@@ -119,7 +119,8 @@ class WP_SMFBridge {
 		$query = self::dsr_db_query($link, "SELECT variable, value FROM " . self::$smf_db_prefix . "settings WHERE variable = 'localCookies' OR variable = 'globalCookies'");
 		while ($row = self::dsr_db_fetch_row($query))
 			$cookies[ $row[0] ] = $row[1];
-			
+		
+		self::dsr_db_close($link);
 		return $cookies;
 	}
 	
@@ -139,6 +140,7 @@ class WP_SMFBridge {
 		unset($_SESSION['login_' . self::$smf_cookiename]);
 		
 		self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "members SET pssword_salt = '" . substr(md5(mt_rand()), 0, 4) . "' WHERE member_name = '{$member_name}'");
+		self::dsr_db_close($link);
 	}
 	
 	//based on url_parts (SMF Subs-Auth.php)
@@ -250,6 +252,7 @@ class WP_SMFBridge {
 		//self::dsr_db_query($link, "INSERT INTO " . self::$smf_db_prefix . "members (" . implode(', ', array_keys($register_vars)) . ") VALUES (" . implode(', ', $register_vars) . ") ON DUPLICATE KEY UPDATE passwd = 'DSR!WP2SMF-Bridge', email_address = '" . addslashes($user_email) . "'");
 		self::dsr_db_query($link, "REPLACE INTO " . self::$smf_db_prefix . "settings (variable, value) VALUES ('latestMember', " . self::dsr_db_insert_id($link) . "), ('latestRealName', '{$login}')");
 		self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "settings SET value = value + 1 WHERE variable = 'totalMembers' LIMIT 1");
+		self::dsr_db_close($link);
 	}
 
 	function authenticateUser($login, $pass){
@@ -262,12 +265,15 @@ class WP_SMFBridge {
 			
 		//Oh my God, that's the funky sh...
 		$user = self::dsr_db_fetch_assoc(self::dsr_db_query($link, "SELECT id_member, passwd, password_salt FROM " . self::$smf_db_prefix . "members WHERE member_name = '{$login}' AND passwd = '{$passwd}' LIMIT 1"));
+		self::dsr_db_close($link);
 		self::smfSetLoginCookie($user['id_member'], $user['passwd'], $user['password_salt']);
 	}
 	
 	function passReset($login, $pass){
 		$link = self::dsr_db_open(self::$smf_db_server, self::$smf_db_user, self::$smf_db_passwd, self::$smf_db_name);
-		return self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "members SET passwd = '" . self::smfPassword($login, $pass) . "' WHERE member_name = '{$login}' LIMIT 1");		
+		$ret = self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "members SET passwd = '" . self::smfPassword($login, $pass) . "' WHERE member_name = '{$login}' LIMIT 1");		
+		self::dsr_db_close($link);
+		return $ret;
 	}
 	
 	function userPassReset($user, $pass){
@@ -295,6 +301,7 @@ class WP_SMFBridge {
 		
 		$link = self::dsr_db_open(self::$smf_db_server, self::$smf_db_user, self::$smf_db_passwd, self::$smf_db_name);
 		$user = self::dsr_db_fetch_assoc(self::dsr_db_query($link, "SELECT id_member, passwd, password_salt FROM " . self::$smf_db_prefix . "members WHERE member_name = '{$user->data->user_login}' LIMIT 1"));
+		self::dsr_db_close($link);
 		self::smfSetLoginCookie($user['id_member'], $user['passwd'], $user['password_salt']);
 	}
 }

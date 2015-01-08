@@ -16,7 +16,9 @@ WP2SMFBridge is a simple one way bridge from Wordpress to Simple Machine Forum (
 This plugin will do these following tasks:
 
 * If a user log in WP, then that user will be logged in SMF.
-* If a user logout WP, then that user will be logged out SMF.
+* If a user logout in WP, then that user will be logged out SMF.
+* If a user created/register/change password in WP, those actions happen on SMF!
+* Users that are created in SMF can be used once disabled WP plugin
 
 
 == Installation ==
