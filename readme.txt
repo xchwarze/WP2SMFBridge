@@ -1,10 +1,11 @@
 === Plugin Name ===
 Contributors: DSR!
 Author URI: https://github.com/xchwarze
-Tags: smf,forums,users,bridge,wordpress
-Requires at least: 2.5.0
+Tags: smf, forums, users, bridge, wordpress
+Requires at least: 2.5
 Tested up to: 4.0	
 Stable tag: 1.0
+License: GPLv2 or later
 
 Login bridge from Wordpress to Simple Machine Forum.
 
@@ -63,4 +64,7 @@ Not yet
 
 
 == Screenshots ==
+
+https://raw.githubusercontent.com/xchwarze/WP2SMFBridge/master/screenshot/screenshot.jpg
+https://raw.githubusercontent.com/xchwarze/WP2SMFBridge/master/screenshot/screenshot2.jpg
 
