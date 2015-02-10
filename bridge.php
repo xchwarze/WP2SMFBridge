@@ -4,7 +4,7 @@ Plugin Name: WP2SMFBridge
 Plugin URI: https://github.com/xchwarze/WP2SMFBridge
 Description: Login bridge for use SMF with WP. For a correct use the users registration and logout is from WP.
 Author: DSR!
-Version: 1.0
+Version: 1.1
 Author URI: https://github.com/xchwarze
 License: GPL2 or later.
 */
@@ -213,6 +213,8 @@ class WP_SMFBridge {
 		if (!self::loadConfig())
 			return false;
 		
+		$login = addslashes($login);
+		$email_address = addslashes($email_address);
 		$link = self::dsr_db_open(self::$smf_db_server, self::$smf_db_user, self::$smf_db_passwd, self::$smf_db_name);
 		
 		//checks
@@ -232,7 +234,7 @@ class WP_SMFBridge {
 		$register_vars = array(
 			'member_name' => "'{$login}'",
 			'real_name' => "'{$login}'",
-			'email_address' => "'" . addslashes($user_email) . "'",
+			'email_address' => "'{$email_address}'",
 			'passwd' => "'DSR!WP2SMF-Bridge'",
 			'password_salt' => "'" . substr(md5(mt_rand()), 0, 4) . "'",
 			'date_registered' => (string)time(),
@@ -259,6 +261,7 @@ class WP_SMFBridge {
 		if ((empty($login) || empty($pass)) || !self::loadConfig())
 			return false;
 		
+		$login = addslashes($login);
 		$passwd = self::smfPassword($login, $pass);
 		$link = self::dsr_db_open(self::$smf_db_server, self::$smf_db_user, self::$smf_db_passwd, self::$smf_db_name);
 		self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "members SET is_activated = '" . self::$is_activated_value . "', passwd = '{$passwd}' WHERE member_name = '{$login}' AND passwd = 'DSR!WP2SMF-Bridge' LIMIT 1");
@@ -271,7 +274,7 @@ class WP_SMFBridge {
 	
 	function passReset($login, $pass){
 		$link = self::dsr_db_open(self::$smf_db_server, self::$smf_db_user, self::$smf_db_passwd, self::$smf_db_name);
-		$ret = self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "members SET passwd = '" . self::smfPassword($login, $pass) . "' WHERE member_name = '{$login}' LIMIT 1");		
+		$ret = self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "members SET passwd = '" . self::smfPassword($login, $pass) . "' WHERE member_name = '" . addslashes($login) . "' LIMIT 1");		
 		self::dsr_db_close($link);
 		return $ret;
 	}
