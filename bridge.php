@@ -240,7 +240,7 @@ class WP_SMFBridge {
 			'date_registered' => (string)time(),
 			'is_activated' => '0',
 			'pm_email_notify' => '1',
-			'member_ip' => "'{$_SERVER['HTTP_REFERER']}'",
+			'member_ip' => "'{$_SERVER['REMOTE_ADDR']}'",
 			/*
 			'posts' => 0,
 			'personal_text' => $modSettings['default_personal_text'],
