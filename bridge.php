@@ -252,6 +252,7 @@ class WP_SMFBridge {
 
 		self::dsr_db_query($link, "INSERT INTO " . self::$smf_db_prefix . "members (" . implode(', ', array_keys($register_vars)) . ") VALUES (" . implode(', ', $register_vars) . ")");
 		//self::dsr_db_query($link, "INSERT INTO " . self::$smf_db_prefix . "members (" . implode(', ', array_keys($register_vars)) . ") VALUES (" . implode(', ', $register_vars) . ") ON DUPLICATE KEY UPDATE passwd = 'DSR!WP2SMF-Bridge', email_address = '" . addslashes($user_email) . "'");
+		self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "members SET email_address = '{$email_address}' WHERE member_name = '{$login}' LIMIT 1");		
 		self::dsr_db_query($link, "REPLACE INTO " . self::$smf_db_prefix . "settings (variable, value) VALUES ('latestMember', " . self::dsr_db_insert_id($link) . "), ('latestRealName', '{$login}')");
 		self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "settings SET value = value + 1 WHERE variable = 'totalMembers' LIMIT 1");
 		self::dsr_db_close($link);
@@ -287,10 +288,17 @@ class WP_SMFBridge {
 	}
 	
 	function userEditProfile($user_id, $old_user_data){
-		if (empty($_POST['pass1']) || !self::loadConfig())
+		if (!self::loadConfig())
 			return false;
+		
+		if (!empty($_POST['pass1']))
+			self::passReset($old_user_data->user_login, $_POST['pass1']);
 			
-		self::passReset($old_user_data->user_login, $_POST['pass1']);
+		if ($old_user_data->user_email !== $_POST['email']) {
+			$link = self::dsr_db_open(self::$smf_db_server, self::$smf_db_user, self::$smf_db_passwd, self::$smf_db_name);
+			self::dsr_db_query($link, "UPDATE " . self::$smf_db_prefix . "members SET email_address = '" . addslashes($_POST['email']) . "' WHERE member_name = '{$old_user_data->user_login}' LIMIT 1");		
+			self::dsr_db_close($link);
+		}
 	}
 	
 	function logoutUser(){
