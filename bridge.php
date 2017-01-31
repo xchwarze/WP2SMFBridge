@@ -20,6 +20,7 @@ class WP_SMFBridge {
 	static $localCookies = 0;			// Enable local storage of cookies
 	static $globalCookies = 0;			// Use subdomain independent cookies
 	static $secureCookies = 0;			// Force cookies to be secure (This only applies if you are using HTTPS - don't use otherwise!)
+	static $cookiesConfigFromSMF = false;// Values: true -> read cookies options from SMF database
 										//         false -> read config from this file
 	static $smf_path = 'EDIT THIS';		// Forum folder
 										// example 1) forum url: www.forum.com wordpress url: www.forum.com/wp config: $smf_path = '../'
@@ -132,6 +133,7 @@ class WP_SMFBridge {
 		setcookie(self::$smf_cookiename, '', time() - 3600, $parsed_url['path'] . '/', $parsed_url['host'], 0);
 		unset($_SESSION['login_' . self::$smf_cookiename]);
 
+		$update = array('password_salt' => substr(md5(mt_rand()), 0, 4));
 		$where = array('member_name' => $member_name );
 		self::$smf_db->update(self::$smf_db_prefix . 'members', $update, $where);
 	}
