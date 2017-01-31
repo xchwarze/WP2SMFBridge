@@ -14,7 +14,15 @@ This plugin will do these following tasks:
 	http://custom.simplemachines.org/mods/index.php?mod=4030
 
 
-Images
------------
+Installation
+====
 
-![alt text](http://oi58.tinypic.com/34j5dmt.jpg "WP2SMFBridge - Settings")
+You must have SMF installed as a directory within your domain. Your forum and WordPress installations should not be on different domains or subdomains! Your blog on mydomain.com and forum on forum.mydomain.com will not work!
+
+For example, if you access your blog from mydomain.com, your wordpress installation is at mydomain.com/wordpress, then it is possible that you can access your forum at mydomain.com/forum. 
+
+1. Upload `WP2SMFBridge` to the `/wp-content/plugins/` directory
+2. Uncheck "Enable local storage of cookies" and "Use subdomain independent cookie" in SMF. You can turn it off from Admin -> Configuration -> Server Settings -> Cookies and Sessions
+3. Activate the plugin through the 'Plugins' menu in WordPress
+4. Edit plugin with edit link. Enter path to your forum, then Save it. If it is accessible, then at this point, WP2SMFBridge is fully activated.
+

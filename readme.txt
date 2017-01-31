@@ -3,9 +3,9 @@ Contributors: DSR!
 Author URI: https://github.com/xchwarze
 Tags: smf, forums, users, bridge, wordpress
 Requires at least: 2.5
-Tested up to: 4.1	
-Stable tag: 1.1
-License: GPLv2 or later
+Tested up to: 4.7	
+Stable tag: 2.0.0
+License: GPL v2
 
 Login bridge from Wordpress to Simple Machine Forum.
 
@@ -34,7 +34,7 @@ For example, if you access your blog from mydomain.com, your wordpress installat
 1. Upload `WP2SMFBridge` to the `/wp-content/plugins/` directory
 2. Uncheck "Enable local storage of cookies" and "Use subdomain independent cookie" in SMF. You can turn it off from Admin -> Configuration -> Server Settings -> Cookies and Sessions
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Visit WP2SMFBridge Settings in your Admin Settings section, enter path to your forum, then Save it. If it is accessible, then at this point, WP2SMFBridge is fully activated.
+4. Edit plugin with edit link. Enter path to your forum, then Save it. If it is accessible, then at this point, WP2SMFBridge is fully activated.
 
 
 == Notes ==
@@ -59,6 +59,14 @@ For example, if you access your blog from mydomain.com, your wordpress installat
 
 = 1.0 =
 * First public version
+
+= 1.1 =
+* Bug fixes
+
+= 2.0 =
+* Rebuilt all code
+* Use wpdb for all querys
+* Add private fixes
 
 
 == Upgrade Notice ==
