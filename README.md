@@ -9,6 +9,7 @@ This plugin will do these following tasks:
 * If a user logout in WP, then that user will be logout in SMF.
 * If a user created/register/change password in WP, those actions happen on SMF! 
 * Users that are created in SMF can be used once disabled WP plugin.
+* V2 work with old WP users!
 * For a full way integration use with SMF2WPBridge plugin.
 	https://github.com/xchwarze/SMF2WPBridge
 	http://custom.simplemachines.org/mods/index.php?mod=4030
