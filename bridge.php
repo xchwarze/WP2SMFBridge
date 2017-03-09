@@ -4,7 +4,7 @@ Plugin Name: WP2SMFBridge
 Plugin URI: https://github.com/xchwarze/WP2SMFBridge
 Description: Login bridge for use SMF with WP. For a correct use the users registration and logout is from WP.
 Author: DSR!
-Version: 2.0.0
+Version: 2.0.2
 Author URI: https://github.com/xchwarze
 License: GPL v2
 */
@@ -94,13 +94,10 @@ class WP_SMFBridge {
 			'is_activated' => self::$default_activated_value,
 			'pm_email_notify' => '1',
 			'member_ip' => $_SERVER['REMOTE_ADDR'],
-			/*
 			'posts' => 0,
-			'personal_text' => $modSettings['default_personal_text'],
-			'pm_email_notify' => 1,
 			'id_theme' => 0,
 			'id_post_group' => 4,
-			*/
+			//'openid_uri' => (!empty($regOptions['openid']) ? $regOptions['openid'] : ''),
 		);
 
 		$result = self::$smf_db->insert(self::$smf_db_prefix . 'members', $insert);
@@ -275,7 +272,7 @@ class WP_SMFBridge {
 		}
 
 		//add
-		$passwd = 'DSR!WP2SMF-Bridge'; //como no tengo el pass aun lo marco asi
+		$passwd = 'DSR!WP2SMF-Bridge-' . (string)time(); //como no tengo el pass aun lo marco asi
 		self::smfAddNewUSer($login, $email_address, $passwd);
 	}
 
@@ -286,7 +283,8 @@ class WP_SMFBridge {
 		return self::$smf_db->get_row( self::$smf_db->prepare($sql, $login), ARRAY_A );
 	}
 
-	function authenticateUser($login, $pass){
+	function authenticateUser($login, $userObj){
+		$pass = isset($_POST['pwd']) ? $_POST['pwd'] : ''; //from wp_signon()
 		if ((empty($login) || empty($pass)) || !self::loadConfig()) {
 			return;
 		}
@@ -301,8 +299,7 @@ class WP_SMFBridge {
 		// loggeo el user
 		$user = self::smfGetUserLoginInfo($login);
 		if (!$user) {
-			$wp_user = wp_get_current_user();
-			self::smfAddNewUser($login, $wp_user->user_email, $passwd);
+			self::smfAddNewUser($login, $userObj->user_email, $passwd);
 			$user = self::smfGetUserLoginInfo($login);
 			if (!$user) {
 				return;
@@ -390,7 +387,7 @@ class WP_SMFBridge {
 
 // Hooks!
 add_action('register_post', array('WP_SMFBridge', 'createUser'), 100, 3);
-add_action('wp_authenticate', array('WP_SMFBridge', 'authenticateUser'), 100, 2);
+add_action('wp_login', array('WP_SMFBridge', 'authenticateUser'), 100, 2);
 add_action('password_reset', array('WP_SMFBridge', 'userPassReset'), 100, 2);
 add_action('profile_update', array('WP_SMFBridge', 'userEditProfile'), 100, 2);
 add_action('wp_logout', array('WP_SMFBridge', 'logoutUser'));
