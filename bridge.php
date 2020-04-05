@@ -4,7 +4,7 @@ Plugin Name: WP2SMFBridge
 Plugin URI: https://github.com/xchwarze/WP2SMFBridge
 Description: Login bridge for use SMF with WP. For a correct use the users registration and logout is from WP.
 Author: DSR!
-Version: 2.0.2
+Version: 2.0.3
 Author URI: https://github.com/xchwarze
 License: GPL v2
 */
@@ -34,6 +34,7 @@ class WP_SMFBridge {
 	static $smf_db_prefix = '';
 	static $smf_boardurl = '';
 	static $smf_cookiename = '';
+	static $smf_auth_secret = '';
 	static $smf_db = false;
 
 	
@@ -52,6 +53,7 @@ class WP_SMFBridge {
 		self::$smf_db_prefix = $db_prefix;
 		self::$smf_boardurl = $boardurl;
 		self::$smf_cookiename = $cookiename;
+		self::$smf_auth_secret = $auth_secret;
 		self::$smf_db = new wpdb($db_user, $db_passwd, $db_name, $db_server);
 		
 		return true;
@@ -165,7 +167,11 @@ class WP_SMFBridge {
 	//based on setLoginCookie (SMF Subs-Auth.php) 
 	function smfSetLoginCookie($id, $password, $salt) {
 		$modSettings = self::smfLoadCookieConfig();
-		$password = sha1($password . $salt);
+		
+		if (empty(self::$smf_auth_secret))
+			$password = sha1($password . $salt);
+		else
+			$password = hash_hmac('sha1', sha1($password . $salt), self::$smf_auth_secret);
 
 		//global $cookiename, $boardurl, $modSettings;
 
