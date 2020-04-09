@@ -12,7 +12,6 @@ This plugin will do these following tasks:
 * V2 work with old WP users!
 * For a full way integration use with SMF2WPBridge plugin.
 	https://github.com/xchwarze/SMF2WPBridge
-	http://custom.simplemachines.org/mods/index.php?mod=4030
 
 
 Installation
